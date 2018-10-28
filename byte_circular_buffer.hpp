@@ -65,12 +65,34 @@ struct circular_buffer {
     }
 
     size_t dequeue(std::byte* dest, size_t len) {
-        if (len == 0) {
+        // early exit for empty buffer to reduce complexity later
+        if (len == 0 || used == 0) {
             return 0;
         }
 
         size_t to_read = std::min(len, used);
+        // since we check for used earlier, we can only
+        // satisfy == when buffer has content
+        if (to_read <= capacity - head) {
+            // single read 
+            std::memcpy(dest, data.get() + head, to_read);
+            increment_head(to_read);
+            used -= to_read;
+            return to_read;
+        } 
+        else {
+            // two-step read: gotta handle wraparound
+            size_t first_read = capacity - head;
+            std::memcpy(dest, data.get() + head, first_read);
+            increment_head(first_read);
+            used -= first_read;
+            size_t second_read = to_read - first_read;
+            std::memcpy(dest + first_read, data.get(), second_read);
+            increment_head(second_read);
+            used -= second_read; 
+        }
 
+        return to_read;
     }
 
 private:
