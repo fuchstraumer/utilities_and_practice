@@ -1,6 +1,6 @@
 #pragma once
-#ifndef CIRCULAR_BUFFER_HPP
-#define CIRCULAR_BUFFER_HPP
+#ifndef BYTE_CIRCULAR_BUFFER_HPP
+#define BYTE_CIRCULAR_BUFFER_HPP
 #include <cstddef>
 #include <memory>
 #include <cstdlib>
@@ -8,10 +8,24 @@
 #include <cstring>
 
 // conserving circular buffer. doesn't overwrite data
-struct circular_buffer {
+struct byte_circular_buffer {
 
-    circular_buffer(size_t capacity) : data(std::make_unique<std::byte[]>(capacity)), capacity{ capacity } { std::memset(data.get(), 0, capacity); }
-    ~circular_buffer() noexcept = default;
+    byte_circular_buffer(size_t capacity) : data(std::make_unique<std::byte[]>(capacity)), capacity(capacity) { 
+        // could get rid of this. not necessary.
+        std::memset(data.get(), 0, capacity); 
+    }
+
+    byte_circular_buffer(byte_circular_buffer&& other) noexcept : data(std::move(other.data)), capacity(std::move(other.capacity)), head(std::move(other.head)),
+        tail(std::move(other.tail)), used(std::move(other.used)) {}
+
+    byte_circular_buffer& operator=(byte_circular_buffer&& other) noexcept {
+        data = std::move(other.data);
+        capacity = std::move(other.capacity);
+        head = std::move(other.head);
+        tail = std::move(other.tail);
+        used = std::move(other.used);
+        return *this;
+    }
 
     size_t enqueue(void* bytes, const size_t len) {
 
@@ -61,7 +75,6 @@ struct circular_buffer {
         head = 0;
         tail = 0;
         used = 0;
-        std::memset(data.get(), 0, capacity);
     }
 
     size_t dequeue(std::byte* dest, size_t len) {
@@ -76,7 +89,6 @@ struct circular_buffer {
         if (to_read <= capacity - head) {
             // single read 
             std::memcpy(dest, data.get() + head, to_read);
-            increment_head(to_read);
             used -= to_read;
             return to_read;
         } 
@@ -84,22 +96,17 @@ struct circular_buffer {
             // two-step read: gotta handle wraparound
             size_t first_read = capacity - head;
             std::memcpy(dest, data.get() + head, first_read);
-            increment_head(first_read);
             used -= first_read;
             size_t second_read = to_read - first_read;
             std::memcpy(dest + first_read, data.get(), second_read);
-            increment_head(second_read);
             used -= second_read; 
         }
 
+        increment_head(to_read);
         return to_read;
     }
 
 private:
-
-    size_t nonconserving_enqueue(void* bytes, const size_t len) {
-
-    }
 
     inline void increment_head(size_t amt) {
         head = (head + amt) % capacity;
@@ -117,4 +124,4 @@ private:
 
 };
 
-#endif //!CIRCULAR_BUFFER_HPP
+#endif //!BYTE_CIRCULAR_BUFFER_HPP
