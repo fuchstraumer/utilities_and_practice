@@ -1,0 +1,15 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.4)
+PROJECT(InterviewPractice)
+
+ADD_EXECUTABLE(InterviewPractice
+    "sort_algorithms.hpp"
+    "lru_cache.hpp"
+    "main.cpp"
+)
+
+TARGET_LINK_LIBRARIES(InterviewPractice PRIVATE pthread)
+TARGET_COMPILE_OPTIONS(InterviewPractice PRIVATE -m64)
+TARGET_COMPILE_DEFINITIONS(InterviewPractice PRIVATE "GLIBCXX_DEBUG")
+
+
+SET_TARGET_PROPERTIES(InterviewPractice PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
