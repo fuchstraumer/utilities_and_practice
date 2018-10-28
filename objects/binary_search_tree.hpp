@@ -79,6 +79,7 @@ struct binary_search_tree {
             // now handle correcting the tree
             if ((deleted_left != nullptr) && (deleted_right != nullptr)) {
                 // worst case
+                
             }
             else if (deleted_left != nullptr) {
                 assert(erased_parent->left.get() == nullptr);
@@ -102,6 +103,7 @@ struct binary_search_tree {
         return search_impl(ptr, val);
     }    
 
+    // function signature is void(bst_node<T>*)
     template<typename Func>
     void breadth_first_apply(Func&& fn) {
         std::queue<bst_node<T>*> queue;
