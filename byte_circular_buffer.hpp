@@ -13,7 +13,7 @@ struct circular_buffer {
     circular_buffer(size_t capacity) : data(std::make_unique<std::byte[]>(capacity)), capacity{ capacity } { std::memset(data.get(), 0, capacity); }
     ~circular_buffer() noexcept = default;
 
-    size_t enqueue(void* bytes, size_t len) {
+    size_t enqueue(void* bytes, const size_t len) {
 
         if (len == 0) {
             return 0;
@@ -23,6 +23,8 @@ struct circular_buffer {
         // simplest case, single step write
         if (to_write <= capacity - tail) {
             std::memcpy(data.get() + tail, bytes, to_write);
+            increment_tail(to_write);
+            return to_write;
         }
         else {
             // copy into available space at tail
@@ -51,37 +53,31 @@ struct circular_buffer {
         return used == capacity;
     }
 
+    bool empty() {
+        return used == 0;
+    }
+
+    void reset() {
+        head = 0;
+        tail = 0;
+        used = 0;
+        std::memset(data.get(), 0, capacity);
+    }
+
     size_t dequeue(std::byte* dest, size_t len) {
-        // wraparound occurs when tail < head
-        if (tail < head) {
-            size_t avail_copy = capacity - head;
-            size_t to_copy = avail_copy <= len ? avail_copy : len;
-            std::memcpy(static_cast<std::byte*>(dest), data.get() + head, to_copy);
-            increment_head(avail_copy);
-            used -= to_copy;
-
-            if (tail != head ) {
-
-
-            }
+        if (len == 0) {
+            return 0;
         }
-        else {
-            if (used < len) {
-                std::memcpy(static_cast<std::byte*>(dest), data.get() + head, used);
-                used = 0;
-                increment_head(used);
-                return used;
-            }
-            else {
-                std::memcpy(static_cast<std::byte*>(dest), data.get() + head, len);
-                increment_head(len);
-                used -= len;
-                return len;
-            }
-        }
+
+        size_t to_read = std::min(len, used);
+
     }
 
 private:
+
+    size_t nonconserving_enqueue(void* bytes, const size_t len) {
+
+    }
 
     inline void increment_head(size_t amt) {
         head = (head + amt) % capacity;
