@@ -8,6 +8,7 @@ ADD_EXECUTABLE(InterviewPractice
     "tests/rle_iterator_test.cpp"
     "tests/circular_deque_test.cpp"
     "tests/forward_list_test.cpp"
+    "tests/stack_test.cpp"
 )
 
 TARGET_LINK_LIBRARIES(InterviewPractice PRIVATE pthread)
