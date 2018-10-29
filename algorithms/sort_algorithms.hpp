@@ -3,6 +3,7 @@
 #define SORT_ALGORITHMS_HPP
 #include <cstddef>
 #include <vector>
+#include <functional>
 
 template<typename T, typename Func>
 void insertion_sort(std::vector<T>& array, Func&& fn) {
@@ -27,5 +28,20 @@ void selection_sort(std::vector<T>& array, Func&& fn) {
         }
     }
 }
+
+template<typename T, typename Comp = std::less<T>>
+void bubble_sort(T* data, const size_t len, Comp cmp) {
+    bool cont = true;
+    for (size_t i = 0; i < len - 1 && cont; ++i) {
+        for (size_t j = len - 1, cont = false; j > i; --j) {
+            if (cmp(data[j], data[j - 1])) {
+                std::swap(data[j], data[j - 1]);
+                cont = true;
+            }
+        }
+    }
+}
+
+
 
 #endif //!SORT_ALGORITHMS_HPP
