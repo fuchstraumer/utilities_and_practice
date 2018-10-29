@@ -130,7 +130,7 @@ public:
         return count;
     }
 
-    void insert_front(T value) {
+    void push_front(T value) {
         if (head != nullptr) {
             node<T>* new_node = new node<T>(value, head, nullptr);
             head = new_node;
@@ -142,7 +142,7 @@ public:
         }
     }
 
-    void insert_back(T value) {
+    void push_back(T value) {
         if (tail != nullptr) {
             node<T>* new_node = new node<T>(value, nullptr, tail);
             tail = new_node;
@@ -154,12 +154,19 @@ public:
         }
     }
 
+    // same as insert_before (based on std::list behavior)
+    void insert(iterator iter, T value) {
+        insert_before(iter, value);
+    }
+
     void insert_after(iterator iter, T value) {
         node<T>* next = iter._node->next;
         node<T>* prev = iter._node;
         node<T>* new_node = new node<T>(value, next, prev);
         next->prev = new_node;
-        prev->next = new_node;
+        if (prev != nullptr) {
+            prev->next = new_node;
+        }
     }
 
     void insert_before(iterator iter, T value) {
@@ -168,10 +175,12 @@ public:
         node<T>* new_node = new node<T>(value, next, prev);
         // keeps iterators valid afaik?
         prev->next = new_node;
-        next->prev = new_node;
+        if (next != nullptr) {
+            next->prev = new_node;
+        }
     }
 
-    void erase_back() {
+    void pop_back() {
         if (tail != head) {
             node<T>* new_tail = tail->prev;
             new_tail->next = nullptr;
@@ -185,7 +194,7 @@ public:
         }
     }
 
-    void erase_front() {
+    void pop_front() {
         if (tail != head) {
             node<T>* new_head = head->next;
             new_head->prev = nullptr;
@@ -229,7 +238,7 @@ public:
         if (iter._node->prev != nullptr) {
             iter._node->prev->next = iter._node;
         }
-        
+
     }
 
     T& front() {
