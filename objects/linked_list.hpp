@@ -26,6 +26,7 @@ private:
     template<bool CONST>
     struct list_iterator {
     private:
+        node* _node{ nullptr };
         friend class linked_list<T>;
         using iterator_category = std::bidirectional_iterator_tag;
         using value_type = std::conditional_t<CONST, const T, T>;
@@ -33,7 +34,7 @@ private:
         using pointer = value_type*;
 
         list_iterator() noexcept = default;
-        list_iterator(node<T>* n) : _node(n) {}
+        list_iterator(node* n) : _node(n) {}
 
     public:
 
@@ -89,8 +90,6 @@ private:
             return other->_node != _node;
         }
 
-    private:
-        node<T>* _node{ nullptr };
     };
 
 public:
@@ -105,14 +104,14 @@ public:
     using const_iterator = list_iterator<true>;
 
     linked_list() noexcept = default;
-    linked_list(T init_val) noexcept : head(new node<T>(init_val, nullptr, nullptr)) { tail = head; }
+    linked_list(T init_val) noexcept : head(new node(init_val, nullptr, nullptr)) { tail = head; }
 
     ~linked_list() {
         clear();
     }
 
     void clear() {
-        node<T>* ptr = head;
+        node* ptr = head;
         while (ptr != nullptr) {
             head = ptr->next;
             delete ptr;
@@ -121,7 +120,7 @@ public:
     }
 
     size_t size() const noexcept {
-        node<T>* ptr = head;
+        node* ptr = head;
         size_t count{ 0 };
         while (ptr != nullptr) {
             ++count;
@@ -130,26 +129,30 @@ public:
         return count;
     }
 
+    bool empty() const noexcept {
+        return head == nullptr;
+    }
+
     void push_front(T value) {
         if (head != nullptr) {
-            node<T>* new_node = new node<T>(value, head, nullptr);
+            node* new_node = new node(value, head, nullptr);
             head = new_node;
             head->next->prev = head;
         }
         else {
-            head = new node<T>(init_val, nullptr, nullptr);
+            head = new node(value, nullptr, nullptr);
             tail = head;
         }
     }
 
     void push_back(T value) {
         if (tail != nullptr) {
-            node<T>* new_node = new node<T>(value, nullptr, tail);
+            node* new_node = new node(value, nullptr, tail);
             tail = new_node;
             tail->prev->next = tail;
         }
         else {
-            head = new node<T>(init_val, nullptr, nullptr);
+            head = new node(value, nullptr, nullptr);
             tail = head;
         }
     }
@@ -160,9 +163,9 @@ public:
     }
 
     void insert_after(iterator iter, T value) {
-        node<T>* next = iter._node->next;
-        node<T>* prev = iter._node;
-        node<T>* new_node = new node<T>(value, next, prev);
+        node* next = iter._node->next;
+        node* prev = iter._node;
+        node* new_node = new node(value, next, prev);
         next->prev = new_node;
         if (prev != nullptr) {
             prev->next = new_node;
@@ -170,9 +173,9 @@ public:
     }
 
     void insert_before(iterator iter, T value) {
-        node<T>* prev = iter._node->prev;
-        node<T>* next = iter._node;
-        node<T>* new_node = new node<T>(value, next, prev);
+        node* prev = iter._node->prev;
+        node* next = iter._node;
+        node* new_node = new node(value, next, prev);
         // keeps iterators valid afaik?
         prev->next = new_node;
         if (next != nullptr) {
@@ -182,7 +185,7 @@ public:
 
     void pop_back() {
         if (tail != head) {
-            node<T>* new_tail = tail->prev;
+            node* new_tail = tail->prev;
             new_tail->next = nullptr;
             delete tail;
             tail = new_tail;
@@ -196,7 +199,7 @@ public:
 
     void pop_front() {
         if (tail != head) {
-            node<T>* new_head = head->next;
+            node* new_head = head->next;
             new_head->prev = nullptr;
             delete head;
             head = new_head;
@@ -211,7 +214,7 @@ public:
     // have to do decent amounts of correction work, to avoid invalidating iterators
     void erase_after(iterator iter) {
         // don't want to access completely null data
-        node<T>* iter_next = iter._node->next;
+        node* iter_next = iter._node->next;
         if (iter_next == tail) {
             throw std::out_of_range("Can't erase beyond end of list!");
         }
@@ -227,7 +230,7 @@ public:
     }
 
     void erase_before(iterator iter) {
-        node<T>* iter_prev = iter._node->prev;
+        node* iter_prev = iter._node->prev;
         if (iter_prev == head) {
             throw std::out_of_range("Can't erase before beginning of list!");
         }
