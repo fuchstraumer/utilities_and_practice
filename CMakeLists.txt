@@ -6,6 +6,7 @@ ADD_EXECUTABLE(InterviewPractice
     "tests/lru_cache_test.cpp"
     "tests/frequency_stack_test.cpp"
     "tests/rle_iterator_test.cpp"
+    "tests/circular_deque_test.cpp"
 )
 
 TARGET_LINK_LIBRARIES(InterviewPractice PRIVATE pthread)

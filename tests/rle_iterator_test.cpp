@@ -25,8 +25,6 @@ TEST_CASE("rle_iterator_test") {
         }
     }
 
-    int remainder = counter % num_to_advance;
-    CHECK((remainder < 6 && remainder >= 0));
     CHECK(iter.next(1) == -1);
 
 }
