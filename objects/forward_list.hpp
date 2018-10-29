@@ -7,6 +7,7 @@
 template<typename T>
 struct forward_list {
 private:
+
     struct node {
         node() = default;
         node(T val, node* _N) : value(std::move(val)), next(_N) {}
@@ -59,6 +60,36 @@ public:
         tail = new_node;
     }
 
+    T erase_front() {
+        node* tmp = head;
+        if (head == tail) {
+            head = nullptr;
+            tail = nullptr;
+        }
+        else {
+            head = head->next;
+        }
+        T result = tmp->value;
+        delete tmp;
+        return result;
+    }
+
+    T erase_back() {
+        T result = tail->value;
+        if (head == tail) {
+            delete head;
+            tail = nullptr;
+            head = nullptr;
+        }
+        else {
+            node* tmp{ nullptr };
+            for (tmp = head; tmp->next != tail; tmp = tmp->next);
+            delete tail;
+            tail = tmp;
+            tail->next = nullptr;
+        }
+        return result;
+    }
 
 };
 
