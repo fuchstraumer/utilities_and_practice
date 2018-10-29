@@ -49,6 +49,11 @@ public:
     }
 
     void insert_back(T val) {
+        if (tail == nullptr) {
+            head = new node(std::move(val), nullptr);
+            tail = head;
+            return;
+        }
         node* new_node = new node(std::move(val), nullptr);
         tail->next = new_node;
         tail = new_node;
