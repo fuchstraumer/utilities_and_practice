@@ -136,6 +136,18 @@ public:
         return result;
     }
 
+    void erase_entry(const T& val) {
+        node* ptr{ head };
+        while (ptr != tail) {
+
+            if (ptr->value == val) {
+
+            }
+
+            
+        }
+    }
+
     const_iterator cbegin() const noexcept {
         return const_iterator{ head };
     }
