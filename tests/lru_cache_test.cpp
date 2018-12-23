@@ -14,7 +14,7 @@ TEST_CASE("functionality test") {
     };
 
     int i = 0;
-    for (const auto& str : test_strs) {
+    for (auto&& str : test_strs) {
         cache.put(i, str);
         ++i;
     }

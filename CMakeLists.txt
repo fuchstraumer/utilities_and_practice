@@ -4,11 +4,11 @@ PROJECT(InterviewPractice)
 ADD_EXECUTABLE(InterviewPractice
     "main.cpp"
     "tests/lru_cache_test.cpp"
-    "tests/frequency_stack_test.cpp"
     "tests/rle_iterator_test.cpp"
     "tests/circular_deque_test.cpp"
     "tests/forward_list_test.cpp"
     "tests/stack_test.cpp"
+    "tests/text_trie_test.cpp"
     "problems/stack_exercises.hpp"
 )
 

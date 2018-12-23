@@ -11,7 +11,7 @@ private:
 
     struct node {
         node() = default;
-        node(T val, node* _N) : value(std::move(val)), next(_N) {}
+        node(T&& val, node* _N) : value(std::forward<T>(val)), next(_N) {}
         T value{};
         node* next{ nullptr };
     };
@@ -86,21 +86,21 @@ public:
         return head == nullptr;
     }
 
-    void insert_front(T val) {
-        node* new_node = new node(std::move(val), head);
+    void insert_front(T&& val) {
+        node* new_node = new node(std::forward<T>(val), head);
         head = new_node;
         if (tail == nullptr) {
             tail = head;
         }
     }
 
-    void insert_back(T val) {
+    void insert_back(T&& val) {
         if (tail == nullptr) {
-            head = new node(std::move(val), nullptr);
+            head = new node(std::forward<T>(val), nullptr);
             tail = head;
             return;
         }
-        node* new_node = new node(std::move(val), nullptr);
+        node* new_node = new node(std::forward<T>(val), nullptr);
         tail->next = new_node;
         tail = new_node;
     }

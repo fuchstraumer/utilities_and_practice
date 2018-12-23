@@ -39,9 +39,10 @@ public:
         }
     }
 
-    void put(Key k, Value val) {
-        values.emplace_front(k, std::move(val));
-        lookup.emplace(k, values.begin());
+    template<typename K, typename V>
+    void put(K&& k, V&& val) {
+        values.emplace_front(k, std::forward<V>(val));
+        lookup.emplace(std::forward<K>(k), values.begin());
         ++numEntries;
 
         if (numEntries > capacity) {
