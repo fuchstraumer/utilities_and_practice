@@ -23,11 +23,6 @@ struct typed_circular_buffer {
         }
     }
 
-    template<typename...Args>
-    void emplace(Args&&...args) {
-        // perfect forward construction in-place
-    }
-
     T pop() {
         if (used == 0) {
             return T();

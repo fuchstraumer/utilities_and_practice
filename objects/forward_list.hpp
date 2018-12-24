@@ -21,7 +21,7 @@ private:
 
     template<bool CONST>
     struct _iterator {
-        friend class forward_list<T>;
+        friend struct forward_list<T>;
 
         _iterator() noexcept = default;
         _iterator(const _iterator&) = default;

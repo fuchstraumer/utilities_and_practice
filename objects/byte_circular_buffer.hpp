@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <utility>
 #include <cstring>
+#include <algorithm>
 
 // conserving circular buffer. doesn't overwrite data
 struct byte_circular_buffer {
@@ -27,7 +28,7 @@ struct byte_circular_buffer {
         return *this;
     }
 
-    size_t enqueue(void* bytes, const size_t len) {
+    size_t enqueue(const void* bytes, const size_t len) {
 
         if (len == 0) {
             return 0;
@@ -50,7 +51,7 @@ struct byte_circular_buffer {
             if (used != capacity && remaining_write != 0) {
                 // can now copy into head region
                 size_t second_copy = std::min(head, remaining_write);
-                std::memcpy(data.get(), bytes + first_copy, second_copy);
+                std::memcpy(data.get(), reinterpret_cast<const char*>(bytes) + first_copy, second_copy);
                 used += second_copy;
                 increment_tail(second_copy);
                 return first_copy + second_copy;

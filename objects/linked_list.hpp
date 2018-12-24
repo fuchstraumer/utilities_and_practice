@@ -27,7 +27,7 @@ private:
     struct list_iterator {
     private:
         node* _node{ nullptr };
-        friend class linked_list<T>;
+        friend struct linked_list<T>;
         using iterator_category = std::bidirectional_iterator_tag;
         using value_type = std::conditional_t<CONST, const T, T>;
         using reference = value_type&;

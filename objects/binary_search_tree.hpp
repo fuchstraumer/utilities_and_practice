@@ -151,7 +151,7 @@ struct binary_search_tree {
         // Left - Right - Visit
         if (node != nullptr) {
             traverse_postorder(node->left.get(), fn);
-            traverse_postorder(node->left.get(), fn);
+            traverse_postorder(node->right.get(), fn);
             fn(node->value);
         }
     }
