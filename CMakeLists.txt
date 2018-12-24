@@ -12,8 +12,8 @@ ADD_EXECUTABLE(InterviewPractice
     "problems/stack_exercises.hpp"
 )
 
-TARGET_LINK_LIBRARIES(InterviewPractice PRIVATE pthread)
-TARGET_COMPILE_OPTIONS(InterviewPractice PRIVATE -m64)
+#TARGET_LINK_LIBRARIES(InterviewPractice PRIVATE pthread)
+#TARGET_COMPILE_OPTIONS(InterviewPractice PRIVATE -m64)
 TARGET_COMPILE_DEFINITIONS(InterviewPractice PRIVATE "GLIBCXX_DEBUG")
 TARGET_INCLUDE_DIRECTORIES(InterviewPractice PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/doctest/doctest"
     "${CMAKE_CURRENT_SOURCE_DIR}")
